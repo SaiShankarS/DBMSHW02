@@ -1,0 +1,5 @@
+sqlite> select FirstName, LastName  from album,artist,track,invoiceLine,i
+nvoice,customer where customer.customerId = invoice.customerID and invoic
+e.invoiceId = invoiceLine.invoiceId and invoiceLine.trackId = track.track
+Id and track.albumId = album.albumId and album.artistId = artist.artistId
+ and artist.name like "%Sinatra%";

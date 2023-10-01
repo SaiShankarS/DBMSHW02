@@ -1,0 +1,80 @@
+$ pip install peewee
+Requirement already satisfied: peewee in /usr/local/python/3.10.8/lib/python3.10/site-packages (3.16.3)
+$ python
+Python 3.10.8 (main, Aug 19 2023, 00:31:12) [GCC 9.4.0] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> from peewee import *
+>>> db = SqliteDatabase('people.db')
+>>> exit(0
+... )
+$ pwd
+/workspaces/advanced-database/beta/topic-04-db-peewee
+$ python
+Python 3.10.8 (main, Aug 19 2023, 00:31:12) [GCC 9.4.0] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> from peewee import *
+>>> db = SqliteDatabase('people.db')
+>>> class Person(Model):
+...     name = CharField()
+...     birthday = DateField()
+...     class Meta:
+...        class Person(Model):
+...     name = CharField()
+  File "<stdin>", line 6
+    name = CharField()
+IndentationError: expected an indented block after class definition on line 5
+>>>     birthday = DateField()
+KeyboardInterrupt
+>>> class Person(Model):
+...     name = CharField()
+...     birthday = DateField()
+...     class Meta:
+...         database=db
+... 
+>>> class Pet(Model):
+...     owner = ForeignKeyField(Person, backref='pets')
+...     name = CharField()
+...     animal_type = CharField()
+...     class Meta:
+...         database=db
+... 
+>>> db.connect()
+True
+>>> db.create_tables([Person, Pet])
+>>> from datetime import date
+>>> uncle_bob = Person(name='Bob', birthday=date(1960, 1, 15))
+>>> uncle_bob.save()
+1
+>>> aunt_jane = Person(name='Jane', birthday=date(1961, 2, 22))
+>>> aunt_jane.save()
+1
+>>> uncle_bob.name="Robert"
+>>> uncle_bob.save()
+1
+>>> bob_kitty = Pet.create(owner=uncle_bob, name='Kitty', animal_type='cat')
+>>> jane_fido = Pet.create(owner=aunt_jane, name='Fido', animal_ty
+pe='dog')
+>>> jane_fido.delete_instance()
+1
+>>> for person in Person.select():
+...     print(person.name)
+... 
+Robert
+Jane
+>>> for person in Person.select().where(Person.name=="Jane").get():
+... 
+  File "<stdin>", line 2
+    
+    ^
+IndentationError: expected an indented block after 'for' statement on line 1
+>>> for person in Person.select().where(Person.name=="Jane").get():
+...    print(person.name)
+... 
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+TypeError: 'Person' object is not iterable
+>>> for person in Person.select().where(Person.name=="Jane"):
+...    print(person.name)
+... 
+Jane
+>>> 
